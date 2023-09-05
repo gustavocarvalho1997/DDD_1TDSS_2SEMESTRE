@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.swing.JOptionPane;
+
 public class ExemploEscrita {
 	public static void main(String[] args) {
 		
@@ -13,8 +15,16 @@ public class ExemploEscrita {
 			//Objeto para escrever em um arquivo
 			PrintWriter arquivo = new PrintWriter(outputstream);
 			//Escrever no arquivo
-			arquivo.println("Ronald pagou R$14,00 em um churros!");
-			arquivo.println("Quando poderia ter pago R$7,50!");
+			while(true) {
+				String escrita = JOptionPane.showInputDialog("Informe o que deseja armazenar no arquivo: ");
+				arquivo.println(escrita);
+				
+				int opcao = Integer.parseInt(JOptionPane.showInputDialog("Digite 1 para armazenar outra informação e 2 para encerrar: "));
+				if(opcao == 2) {
+					break;
+				}
+			}
+			
 			
 			//Fechar os recursos abertos
 			arquivo.close();
