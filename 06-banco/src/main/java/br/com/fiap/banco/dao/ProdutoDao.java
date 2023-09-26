@@ -5,65 +5,89 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.fiap.banco.exception.IdInexistenteException;
 import br.com.fiap.banco.model.Produto;
 
 //Realiza as ações de CRUD (Create, Read, Update, Delete) no banco de dados
 public class ProdutoDao {
-	
-	public void cadastrar(Produto produto) throws ClassNotFoundException, SQLException {
+
+	public void cadastrar(Produto produto) throws ClassNotFoundException, SQLException  {
+		//Abrir a conexão com o banco
 		Class.forName("oracle.jdbc.driver.OracleDriver");
-		//Obter a conexão com o banco de dados
-		Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl", "RM552466", "160297");
-		System.out.println("Conectado!");
+		Connection conn = DriverManager.getConnection(
+				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
+				"pf0392", "fiap");
 		
-		PreparedStatement stmt = conn.prepareStatement("INSERT INTO T_PRODUTO(CD_PRODUTO,NM_PRODUTO,"
-				+ "NR_ESTOQUE,VL_VENDA,VL_COMPRA) VALUES (?,?,?,?,?)");
+		//Criar o objeto com o comando SQL configurável
+		PreparedStatement stm = conn.prepareStatement("INSERT INTO"
+				+ " T_PRODUTO (cd_produto, nm_produto, nr_estoque,"
+				+ " vl_venda, vl_compra) values (?, ?, ?, ?, ?)");
 		
-		stmt.setInt(1, produto.getCodigo());
-		stmt.setString(2, produto.getNome());
-		stmt.setInt(3, produto.getNumeroEstoque());
-		stmt.setDouble(4, produto.getValorVenda());
-		stmt.setDouble(5, produto.getValorCompra());
+		//Setar os valores no comando SQL
+		stm.setInt(1, produto.getCodigo());
+		stm.setString(2, produto.getNome());
+		stm.setInt(3, produto.getEstoque());
+		stm.setDouble(4, produto.getValorVenda());
+		stm.setDouble(5, produto.getValorCompra());
 		
-		stmt.executeUpdate();
-		System.out.println("Produto cadastrado com sucesso");
-		
-		conn.close();
+		//Executar o comando SQL
+		stm.executeUpdate();
 	}
 	
-	public Produto pesquisarPorId(int id) throws ClassNotFoundException, SQLException {
+	public List<Produto> listar() throws ClassNotFoundException, SQLException{
+		//Criar a conexão com o banco de dados
 		Class.forName("oracle.jdbc.driver.OracleDriver");
-		//Obter a conexão com o banco de dados
-		Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl", "RM552466", "160297");
-		System.out.println("Conectado!");
-		
-		PreparedStatement stmt = conn.prepareStatement("SELECT * FROM T_PRODUTO WHERE CD_PRODUTO = ?");
-		stmt.setInt(1, id);
-		
-		ResultSet rs = stmt.executeQuery();
-		if(rs.next()) {
-			return new Produto(rs.getInt("CD_PRODUTO"), rs.getInt("NR_ESTOQUE"), rs.getString("NM_PRODUTO"), rs.getDouble("VL_VENDA"), rs.getDouble("VL_COMPRA"));
-		} else {
-			return null;
-			
-		}
-		
-	}
-	
-	public List<Produto> listar() throws ClassNotFoundException, SQLException {
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		//Obter a conexão com o banco de dados
-		Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl", "RM552466", "160297");
-		System.out.println("Conectado!");
-		
-		PreparedStatement stmt = conn.prepareStatement("SELECT * FROM T_PRODUTO");
-		List<Produto> produtos = null;
-		ResultSet rs = stmt.executeQuery();
+		Connection conn = DriverManager.getConnection(
+				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
+				"pf0392", "fiap");
+		//Criar o comando SQL
+		PreparedStatement stm = conn.prepareStatement("SELECT * FROM T_PRODUTO");
+		//Executar o comando SQL
+		ResultSet rs = stm.executeQuery();
+		//Criar a lista de produtos
+		ArrayList<Produto> lista = new ArrayList<Produto>();
+		//Percorrer todos os registros encontrados	
 		while(rs.next()) {
-			produtos.add(new Produto(rs.getInt("CD_PRODUTO"), rs.getInt("NR_ESTOQUE"), rs.getString("NM_PRODUTO"), rs.getDouble("VL_VENDA"), rs.getDouble("VL_COMPRA")));
+			//Recuperar os valores das colunas
+			int id = rs.getInt("cd_produto");
+			String nome = rs.getString("nm_produto");
+			int estoque = rs.getInt("nr_estoque");
+			double valorVenda = rs.getDouble("vl_venda");
+			double valorCompra = rs.getDouble("vl_compra");
+			//Instanciar um produto com esses valores
+			Produto pd = new Produto(id, nome, estoque, valorVenda, valorCompra);
+			//Adicionar na lista
+			lista.add(pd);
 		}
-		return produtos;
+		//Retornar a lista de produto
+		return lista;
 	}
-}//CLASS
+	
+	//Deixar para depois
+	public Produto pesquisar(int id) throws ClassNotFoundException, SQLException, IdInexistenteException {
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection conn = DriverManager.getConnection(
+				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
+				"pf0392", "fiap");
+		PreparedStatement stm = conn.prepareStatement("SELECT * FROM T_PRODUTO WHERE cd_produto = ?");
+		stm.setInt(1, id);
+		ResultSet rs = stm.executeQuery();
+		if(rs.next()) {
+			//Recuperar os valores das colunas
+			int cd = rs.getInt("cd_produto");
+			String nome = rs.getString("nm_produto");
+			int estoque = rs.getInt("nr_estoque");
+			double valorVenda = rs.getDouble("vl_venda");
+			double valorCompra = rs.getDouble("vl_compra");
+			//Instanciar um produto com esses valores
+			Produto pd = new Produto(cd, nome, estoque, valorVenda, valorCompra);
+			return pd;
+		} else {
+			throw new IdInexistenteException("O Id informado não existe!");
+		}
+	}
+	
+}

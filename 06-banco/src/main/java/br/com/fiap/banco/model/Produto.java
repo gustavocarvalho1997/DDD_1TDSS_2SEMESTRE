@@ -1,54 +1,61 @@
 package br.com.fiap.banco.model;
 
 public class Produto {
-	//ATRIBUTOS
-	private int codigo, numeroEstoque;
+
+	private int codigo;
 	private String nome;
-	private double valorVenda, valorCompra;
-	//CONSTRUTORES
-	public Produto(int codigo, int numeroEstoque, String nome, double valorVenda, double valorCompra) {
-		super();
+	private int estoque;
+	private double valorVenda;
+	private double valorCompra;
+	
+	public Produto() {}
+
+	public Produto(int codigo, String nome, int estoque, double valorVenda, double valorCompra) {
 		this.codigo = codigo;
-		this.numeroEstoque = numeroEstoque;
 		this.nome = nome;
+		this.estoque = estoque;
 		this.valorVenda = valorVenda;
 		this.valorCompra = valorCompra;
 	}
-	public Produto() {
-		super();
-	}
-	//GETTERS
+
 	public int getCodigo() {
 		return codigo;
 	}
-	public int getNumeroEstoque() {
-		return numeroEstoque;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public double getValorVenda() {
-		return valorVenda;
-	}
-	public double getValorCompra() {
-		return valorCompra;
-	}
-	//SETTERS
+
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-	public void setNumeroEstoque(int numeroEstoque) {
-		this.numeroEstoque = numeroEstoque;
+
+	public String getNome() {
+		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
+	public int getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(int estoque) {
+		this.estoque = estoque;
+	}
+
+	public double getValorVenda() {
+		return valorVenda;
+	}
+
 	public void setValorVenda(double valorVenda) {
 		this.valorVenda = valorVenda;
 	}
+
+	public double getValorCompra() {
+		return valorCompra;
+	}
+
 	public void setValorCompra(double valorCompra) {
 		this.valorCompra = valorCompra;
 	}
-	
-	
-}//CLASS
+
+}
