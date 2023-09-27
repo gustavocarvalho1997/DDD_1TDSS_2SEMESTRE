@@ -1,7 +1,6 @@
 package br.com.fiap.banco.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fiap.banco.exception.IdInexistenteException;
+import br.com.fiap.banco.factory.ConnectionFactory;
 import br.com.fiap.banco.model.Produto;
 
 //Realiza as ações de CRUD (Create, Read, Update, Delete) no banco de dados
@@ -16,10 +16,8 @@ public class ProdutoDao {
 
 	public void cadastrar(Produto produto) throws ClassNotFoundException, SQLException  {
 		//Abrir a conexão com o banco
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		Connection conn = DriverManager.getConnection(
-				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
-				"pf0392", "fiap");
+		Connection conn = ConnectionFactory.getConnection();
+		
 		
 		//Criar o objeto com o comando SQL configurável
 		PreparedStatement stm = conn.prepareStatement("INSERT INTO"
@@ -38,11 +36,8 @@ public class ProdutoDao {
 	}
 	
 	public List<Produto> listar() throws ClassNotFoundException, SQLException{
-		//Criar a conexão com o banco de dados
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		Connection conn = DriverManager.getConnection(
-				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
-				"pf0392", "fiap");
+		//Criar a conex ão com o banco de dados
+		Connection conn = ConnectionFactory.getConnection();
 		//Criar o comando SQL
 		PreparedStatement stm = conn.prepareStatement("SELECT * FROM T_PRODUTO");
 		//Executar o comando SQL
@@ -68,10 +63,7 @@ public class ProdutoDao {
 	
 	//Deixar para depois
 	public Produto pesquisar(int id) throws ClassNotFoundException, SQLException, IdInexistenteException {
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		Connection conn = DriverManager.getConnection(
-				"jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl",
-				"pf0392", "fiap");
+		Connection conn = ConnectionFactory.getConnection();
 		PreparedStatement stm = conn.prepareStatement("SELECT * FROM T_PRODUTO WHERE cd_produto = ?");
 		stm.setInt(1, id);
 		ResultSet rs = stm.executeQuery();
@@ -89,5 +81,6 @@ public class ProdutoDao {
 			throw new IdInexistenteException("O Id informado não existe!");
 		}
 	}
+	//FAZER O UPDATE E O DELETE
 	
 }

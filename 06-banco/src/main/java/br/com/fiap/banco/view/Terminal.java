@@ -23,7 +23,7 @@ public class Terminal {
 		try {
 			//dao.cadastrar(produto);
 			System.out.println("Gravado!");
-			System.out.println(dao.pesquisar(10));
+			System.out.println(dao.pesquisar(1).getNome());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
