@@ -18,6 +18,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 
@@ -42,8 +43,12 @@ public class ProdutoResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Produto busca(@PathParam("id") int codigo) throws ClassNotFoundException, SQLException, IdNotFoundException {
-		return dao.pesquisar(codigo);
+	public Response busca(@PathParam("id") int codigo) throws ClassNotFoundException, SQLException {
+		try {
+			return Response.ok(dao.pesquisar(codigo)).build();
+		}  catch (IdNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	
 	@POST
@@ -61,16 +66,25 @@ public class ProdutoResource {
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response atualizar(Produto produto, @PathParam("id") int codigo) throws ClassNotFoundException, SQLException, IdNotFoundException {
-		produto.setCodigo(codigo);
-		dao.atualizar(produto);
-		return Response.ok().build();
+	public Response atualizar(Produto produto, @PathParam("id") int codigo) throws ClassNotFoundException, SQLException {
+		try {
+			produto.setCodigo(codigo);
+			dao.atualizar(produto);
+			return Response.ok().build();
+		} catch (IdNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	
 	@DELETE
 	@Path("/{id}")
-	public void remover(@PathParam("id") int codigo) throws ClassNotFoundException, SQLException, IdNotFoundException {
-		dao.remover(codigo);
+	public Response remover(@PathParam("id") int codigo) throws ClassNotFoundException, SQLException {
+		try {
+			dao.remover(codigo);
+			return Response.noContent().build();
+		} catch (IdNotFoundException e) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	
 }//CLASS
