@@ -17,6 +17,10 @@ public class Categoria {
 		this.categoria = categoria;
 		this.perecivel = perecivel;
 	}//Categoria
+	public Categoria() {
+		super();
+	}
+	
 	//Getters
 	public int getId() {
 		return id;
