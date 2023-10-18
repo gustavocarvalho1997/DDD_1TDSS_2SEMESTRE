@@ -12,6 +12,10 @@ public class Categoria {
 		this.categoria = categoria;
 		this.perecivel = perecivel;
 	}//Categoria
+	public Categoria(int id) {
+		super();
+		this.id = id;
+	}
 	public Categoria(String categoria, boolean perecivel) {
 		super();
 		this.categoria = categoria;

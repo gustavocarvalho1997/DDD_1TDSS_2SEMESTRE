@@ -8,6 +8,8 @@ public class Produto {
 	private double valorVenda;
 	private double valorCompra;
 	
+	private Categoria categoria;
+	
 	public Produto() {}
 
 	public Produto(int codigo, String nome, int estoque, double valorVenda, double valorCompra) {
@@ -16,6 +18,15 @@ public class Produto {
 		this.estoque = estoque;
 		this.valorVenda = valorVenda;
 		this.valorCompra = valorCompra;
+	}
+	
+	public Produto(int codigo, String nome, int estoque, double valorVenda, double valorCompra, Categoria categoria) {
+		this.codigo = codigo;
+		this.nome = nome;
+		this.estoque = estoque;
+		this.valorVenda = valorVenda;
+		this.valorCompra = valorCompra;
+		this.categoria = categoria;
 	}
 
 	public int getCodigo() {
@@ -36,6 +47,10 @@ public class Produto {
 
 	public int getEstoque() {
 		return estoque;
+	}
+	
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
 	public void setEstoque(int estoque) {
@@ -58,4 +73,7 @@ public class Produto {
 		this.valorCompra = valorCompra;
 	}
 
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 }
