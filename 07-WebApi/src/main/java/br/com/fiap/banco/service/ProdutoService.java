@@ -21,22 +21,25 @@ public class ProdutoService {
 		categoriaDao = new CategoriaDao(conn);
 	}
 	
-	//CADASTRAR
-	public void cadastrar (Produto produto) throws BadInfoException, ClassNotFoundException, SQLException {
+	private void verificaIntegridade(Produto produto) throws BadInfoException {
 		//Implementar algumas regras:
 		//Nome é obrigatório e não pode ter mais do que 50 caracteres
 		if(produto.getNome() == null || produto.getNome().length() > 50) {
 			throw new BadInfoException("Nome inválido, não pode ser nulo e no máximo 50 caracteres!");
 		}
 		//Estoque, valor de compra e venda tem que ser maiores do que 0
-		if(produto.getEstoque() > 0 && produto.getValorCompra() > 0 && produto.getValorVenda() > 0) {
+		if(produto.getEstoque() >= 0 && produto.getValorCompra() > 0 && produto.getValorVenda() > 0) {
 			throw new BadInfoException("Estoque, valor de compra e valor de venda devem ser maiores que 0");
 		}
 		//Valor de venda deve ser maior do que valor de compra
 		if(produto.getValorVenda() > produto.getValorCompra()) {
 			throw new BadInfoException("Valor de venda deve ser maior do que o valor de compra!");
 		}
-		//Lembrar de mudar resource no post pra bad request
+	}
+	
+	//CADASTRAR
+	public void cadastrar (Produto produto) throws BadInfoException, ClassNotFoundException, SQLException {
+		verificaIntegridade(produto);
 		
 		produtoDao.cadastrar(produto);
 	}
@@ -45,6 +48,10 @@ public class ProdutoService {
 	public List<Produto> listar() throws ClassNotFoundException, SQLException {
 		List<Produto> lista = produtoDao.listar();
 		return lista;
+	}
+	
+	public List<Produto> pesquisarPorNome(String nome) throws SQLException {
+		return produtoDao.pesquisarPorNome(nome);
 	}
 	
 	
@@ -60,7 +67,8 @@ public class ProdutoService {
 	}
 	
 	//ATUALIZAR
-	public void atualizar(Produto produto) throws ClassNotFoundException, SQLException, IdNotFoundException {
+	public void atualizar(Produto produto) throws ClassNotFoundException, SQLException, IdNotFoundException, BadInfoException {
+		verificaIntegridade(produto);
 		produtoDao.atualizar(produto);
 	}
 	

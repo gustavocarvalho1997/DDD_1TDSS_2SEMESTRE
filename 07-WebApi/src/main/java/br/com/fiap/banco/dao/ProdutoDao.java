@@ -127,5 +127,17 @@ public class ProdutoDao {
 		if (linha == 0)
 			throw new IdNotFoundException("Produto não encontrado para remoção");
 	}
+	
+	public List<Produto> pesquisarPorNome(String nome) throws SQLException{
+		PreparedStatement stm = conn.prepareStatement("SELECT * FROM T_PRODUTO WHERE NM_PRODUTO LIKE ?");
+		stm.setString(1, "%"+nome+"%");
+		ResultSet rs = stm.executeQuery();
+		List<Produto> lista = new ArrayList<>();
+		while(rs.next()) {
+			Produto prod = parse(rs);
+			lista.add(prod);
+		}
+		return lista;
+	}
 
 }
