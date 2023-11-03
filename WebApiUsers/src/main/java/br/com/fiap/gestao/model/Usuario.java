@@ -3,13 +3,17 @@ package br.com.fiap.gestao.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Usuario {
 	//ATRIBUTOS
 	private int codigo;
 	private String nome;
 	private String email;
 	private String cpf;
+	@JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
 	private LocalDateTime dataCadastro;
+	@JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
 	private LocalDate dataNascimento;
 	
 	//CONSTRUTOR
@@ -22,6 +26,9 @@ public class Usuario {
 		this.cpf = cpf;
 		this.dataCadastro = dataCadastro;
 		this.dataNascimento = dataNascimento;
+	}
+	public Usuario() {
+		super();
 	}
 	
 	//GETTERS
