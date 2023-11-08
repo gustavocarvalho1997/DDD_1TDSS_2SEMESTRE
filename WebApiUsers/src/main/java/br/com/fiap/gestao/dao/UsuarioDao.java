@@ -36,6 +36,7 @@ public class UsuarioDao implements IUsuarioDao{
 		LocalDateTime dataCadastro = dt1.toLocalDateTime();
 		Timestamp dt2 = rs.getTimestamp("DT_NASCIMENTO");
 		LocalDate dataNascimento = dt2.toLocalDateTime().toLocalDate();
+		//tbm poderia LocalDate dt = rs.getObject("dt_cadastro", LocalDateTime.class)
 		String email = rs.getString("DS_EMAIL");
 		String cpf = rs.getString("NR_CPF");
 		
@@ -88,7 +89,6 @@ public class UsuarioDao implements IUsuarioDao{
 
 	// Atualizar INICIO
 	public void atualizar(Usuario usuario) throws SQLException, IdNotFoundException {
-		// TODO Auto-generated method stub
 		pesquisarPorCodigo(usuario.getCodigo());
 		PreparedStatement stm = conn.prepareStatement(ATUALIZAR);
 		stm.setString(1, usuario.getNome());
